@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { LogOut, PanelLeft } from "lucide-react";
 import { useToast } from "../hooks/useToasts";
-import InternHubImage from "../assets/internhub.png";
+import TalentMap from "../assets/talentmap.png";
 
 interface MenuItem {
   label: string;
@@ -67,8 +67,8 @@ export default function Sidebar({
         {!collapsed && (
           <div className="flex items-center gap-3">
             <img
-              src={InternHubImage}
-              alt="InternHub"
+              src={TalentMap}
+              alt="TalentMap"
               className="h-10 w-auto object-contain"
             />
           </div>

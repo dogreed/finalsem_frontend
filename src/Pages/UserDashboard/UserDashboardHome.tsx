@@ -300,7 +300,7 @@ export default function UserDashboardHome() {
                   </div>
 
                   <button
-                    onClick={() => navigate(`/user/jobs/${job.vacancyId}`)}
+                    onClick={() => navigate(`/user/jobs/`)}
                     className="rounded-xl bg-linear-to-r from-blue-600 to-cyan-500 px-6 py-2.5 font-medium text-white transition-all hover:shadow-lg"
                   >
                     View Job

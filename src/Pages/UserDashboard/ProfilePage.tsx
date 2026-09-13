@@ -19,6 +19,28 @@ import { updateStudentProfile } from "../../api/student/profile/put-student-prof
 import { uploadStudentPhoto } from "../../api/student/profile/upload-photo";
 
 import { useToast } from "../../hooks/useToasts";
+const buildFileUrl = (fileUrl?: string | null) => {
+  if (!fileUrl) return "";
+
+  // If API already returned a complete URL
+  if (/^https?:\/\//i.test(fileUrl)) {
+    return fileUrl;
+  }
+
+  const apiBase = (import.meta.env.VITE_API_BASE_URL ?? "")
+    .replace(/\/+$/, "");
+
+  // https://localhost:7292/api
+  //          ↓
+  // https://localhost:7292
+  const backend = apiBase.replace(/\/api$/i, "");
+
+  const path = fileUrl.startsWith("/")
+    ? fileUrl
+    : `/${fileUrl}`;
+
+  return `${backend}${path}`;
+};
 
 export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -271,7 +293,7 @@ export default function ProfilePage() {
                   <div className="h-24 w-24 overflow-hidden rounded-2xl border border-gray-200 bg-gray-100">
                     {photoUrl ? (
                       <img
-                        src={`${import.meta.env.VITE_BACKEND_URL}${encodeURI(photoUrl)}`}
+                        src={buildFileUrl(photoUrl)}
                         alt={fullName}
                         className="h-full w-full object-cover"
                       />
@@ -600,11 +622,11 @@ export default function ProfilePage() {
             </div>
 
             <div className="h-[calc(90vh-73px)] w-full">
-              <iframe
-                src={`${import.meta.env.VITE_BACKEND_URL}${resumeUrl}`}
-                title="Resume Preview"
-                className="h-full w-full"
-              />
+            <iframe
+              src={buildFileUrl(resumeUrl)}
+              title="Resume Preview"
+              className="h-full w-full"
+            />
             </div>
           </div>
         </div>

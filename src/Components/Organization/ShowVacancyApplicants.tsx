@@ -157,6 +157,27 @@ export default function ShowVacancyApplicants({
     }
   };
 
+const buildResumeUrl = (resumeUrl?: string | null) => {
+  if (!resumeUrl) return null;
+
+  // Already an absolute URL
+  if (/^https?:\/\//i.test(resumeUrl)) {
+    return resumeUrl;
+  }
+
+  const apiBase = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/+$/, "");
+
+  // https://localhost:7292/api -> https://localhost:7292
+  const backend = apiBase.replace(/\/api$/i, "");
+
+  // API returns /resumes/filename.pdf
+  const path = resumeUrl.startsWith("/")
+    ? resumeUrl
+    : `/${resumeUrl}`;
+
+  return `${backend}${path}`;
+};
+
   if (!open) return null;
 
   return (
@@ -285,11 +306,19 @@ export default function ShowVacancyApplicants({
 
                           {application.resumeUrl && (
                             <button
-                              onClick={() =>
-                                setSelectedResume(
-                                  `${import.meta.env.VITE_BACKEND_URL}${application.resumeUrl}`,
-                                )
-                              }
+                              onClick={() => {
+                                // Build absolute URL and open preview
+                                const url = buildResumeUrl(application.resumeUrl);
+                                console.log("resumeUrl raw:", application.resumeUrl);
+                                console.log("built resume url:", url);
+                                console.debug("resumeUrl raw:", application.resumeUrl);
+                                console.debug("built resume url:", url);
+                                if (!url) {
+                                  showError("Resume URL missing or invalid.");
+                                  return;
+                                }
+                                setSelectedResume(url);
+                              }}
                               className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition-all hover:bg-blue-100 hover:shadow-sm"
                             >
                               <FileText className="h-4 w-4" />
